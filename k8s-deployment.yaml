@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jsmidsem-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jsmidsem
+  template:
+    metadata:
+      labels:
+        app: jsmidsem
+    spec:
+      containers:
+      - name: jsmidsem
+        image: jsmidsem:v1
+        ports:
+        - containerPort: 3000   # This is the port your Node.js app listens to
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jsmidsem-service
+spec:
+  type: NodePort
+  selector:
+    app: jsmidsem
+  ports:
+    - protocol: TCP
+      port: 3000           # Port inside the container
+      targetPort: 3000
+      nodePort: 30005      # Port on the Minikube host
